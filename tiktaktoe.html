@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+        #board {
+        display:grid;
+        grid-template-columns:repeat(3,100px);
+        gap:5px;
+        }
+        button{
+            height: 100px;
+            font-size: 40px;
+            background: plum;
+            color: darkviolet;
+            cursor:pointer;
+            border:10px;
+            border-style:solid;
+            border-color: purple;
+        }
+        p{
+            font-size:25px;
+            color:magenta;
+        }
+        </style>
+    </head>
+    <body>
+        <h1>TIKTAKTOE :D</h1>
+        <p id="status">Player X Turn</p>
+        <div id="board"></div>
+        <p id="won"></p>
+        <div id="restarted"></div>
+        <script>
+            let data=[" "," "," "," "," "," "," "," "," "];
+            let player="X"
+            let restart=false;
+            console.log(data)
+            function draw(){
+                let board="";
+                for (let i=0;i<9;i++){
+                    board+=`<button onclick="move(${i})">${data[i]}</button>`
+                }
+                document.getElementById("board").innerHTML=board;
+            }
+            function move(x){
+                if (restart){
+                    return
+                }
+                if (data[x]!=" "){
+                    return;
+                }
+                data[x]=player
+                let tmp=won();
+                if (tmp==0){
+                    draw();
+                    if (player==="X"){
+                        player="O"
+                    }else{
+                        player="X"
+                    }
+                    document.getElementById("status").textContent="Player "+player+" Turn"
+                }else{
+                    reset(tmp);
+                    draw();
+                }
+            }
+            function won(){
+                if(data[0]===player&&data[1]===player&&data[2]===player){
+                    return 1;
+                }else if(data[3]===player&&data[4]===player&&data[5]===player){
+                    return 1;
+                }else if(data[6]===player&&data[7]===player&&data[8]===player){
+                    return 1;
+                }else if(data[0]===player&&data[3]===player&&data[6]===player){
+                    return 1;
+                }else if(data[1]===player&&data[4]===player&&data[7]===player){
+                    return 1;
+                }else if(data[2]===player&&data[5]===player&&data[8]===player){
+                    return 1;
+                }else if(data[0]===player&&data[4]===player&&data[8]===player){
+                    return 1;
+                }else if(data[2]===player&&data[4]===player&&data[6]===player){
+                    return 1;
+                }else if(!data.includes(" ")){
+                    return 2;
+                }else{
+                    return 0;
+                }
+            }
+            function reset(x){
+                restart=true
+                if (x==1){
+                    document.getElementById("won").textContent="Player "+player+" WON :D"
+                }else{
+                    document.getElementById("won").textContent="TIE :O"
+                }
+                document.getElementById("restarted").innerHTML=`<button onclick="restarted()">RESTART :P</button>`;
+            }
+            function restarted(){
+                data=[" "," "," "," "," "," "," "," "," "];
+                document.getElementById("won").textContent=""
+                document.getElementById("restarted").innerHTML=``;
+                draw();
+                restart=false
+            }
+            draw();
+        </script>
+    </body>
+</html>
